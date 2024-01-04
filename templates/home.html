@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block content %}
+
+<body>
+<div>
+    <h1>Please enter a ticker symbol</h1>
+    <form method="POST" action="/response">
+        <input name="ticker" id="tickerInput" autocomplete="off" list="tickerList" pattern=".{2,}" title="Please enter at least 2 characters" required>
+        <datalist id="tickerList">
+            {% for ticker, company in ticker_data.items() %}
+            <option value="{{ company }} - {{ ticker }}"></option>
+            {% endfor %}
+        </datalist>
+        <input type="submit" value="Search">
+    </form>
+    <br>
+    <p>This data is retrieved from <a href="https://finance.yahoo.com/" style="color: #BFDDE6;">Yahoo Finance</a></p>
+</div>
+
+<script>
+    var tickerInput = document.getElementById('tickerInput');
+    var tickerList = document.getElementById('tickerList');
+
+    tickerInput.addEventListener('input', function() {
+        var selectedOption = Array.from(tickerList.options)
+            .find(option => option.value === tickerInput.value);
+        if (selectedOption) {
+            tickerInput.value = selectedOption.value.split(" - ")[1];
+        }
+    });
+</script>
+</body>
+</html>
+
+{% endblock %}
